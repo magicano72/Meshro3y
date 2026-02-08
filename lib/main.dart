@@ -41,7 +41,15 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final locale = ref.watch(languageProvider);
+    final languageCode = ref.watch(languageProvider);
+
+    // Map language code to full locale with country code
+    final localeMap = {
+      'ar': const Locale('ar', 'SA'),
+      'en': const Locale('en', 'US'),
+    };
+
+    final locale = localeMap[languageCode] ?? const Locale('ar', 'SA');
 
     return MaterialApp(
       title: 'Meshro3y',
@@ -49,14 +57,15 @@ class MyApp extends ConsumerWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
-      locale: Locale(locale),
+      locale: locale,
       supportedLocales: const [
         Locale('ar', 'SA'),
         Locale('en', 'US'),
       ],
-      localizationsDelegates: [
+      localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
       ],
       home: const HomeScreen(),
     );

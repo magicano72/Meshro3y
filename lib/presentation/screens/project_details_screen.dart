@@ -1,8 +1,8 @@
 import 'package:Meshro3y/data/models/project_model.dart';
+import 'package:Meshro3y/presentation/utils/smooth_transitions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/constants/app_constants.dart';
 import '../../core/localization/app_localizations.dart';
 import '../../core/utils/formatters.dart';
 import '../providers/machine_provider.dart';
@@ -39,32 +39,98 @@ class ProjectDetailsScreen extends ConsumerWidget {
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('selectMachines'.tr),
-        content: SizedBox(
-          width: double.maxFinite,
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: availableMachines.length,
-            itemBuilder: (context, index) {
-              final machine = availableMachines[index];
-              return ListTile(
-                leading: const Icon(Icons.construction),
-                title: Text(machine.name),
-                subtitle: Text(
-                    '${CurrencyFormatter.format(machine.pricePerHour)}/hour'),
-                onTap: () {
-                  ref.read(projectProvider.notifier).addMachineToProject(
-                        projectId,
-                        machine.id,
-                      );
-                  Navigator.pop(context);
-                },
-              );
-            },
+      builder: (context) {
+        final screenWidth = MediaQuery.of(context).size.width;
+        final isTablet = screenWidth > 600;
+
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          elevation: 8,
+          title: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.secondaryContainer,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(
+                  Icons.construction,
+                  color: Theme.of(context).colorScheme.onSecondaryContainer,
+                  size: isTablet ? 24 : 20,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  'selectMachines'.tr,
+                  style: TextStyle(
+                    fontSize: isTablet ? 18 : 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ),
-      ),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: availableMachines.length,
+              itemBuilder: (context, index) {
+                final machine = availableMachines[index];
+                return Card(
+                  elevation: 1,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: ListTile(
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    leading: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.secondaryContainer,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(
+                        Icons.construction,
+                        size: 20,
+                        color:
+                            Theme.of(context).colorScheme.onSecondaryContainer,
+                      ),
+                    ),
+                    title: Text(
+                      machine.name,
+                      style: TextStyle(
+                        fontSize: isTablet ? 16 : 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    subtitle: Text(
+                      '${CurrencyFormatter.format(machine.pricePerHour)}/hour',
+                      style: TextStyle(fontSize: isTablet ? 14 : 12),
+                    ),
+                    onTap: () {
+                      ref.read(projectProvider.notifier).addMachineToProject(
+                            projectId,
+                            machine.id,
+                          );
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('machineAdded'.tr)),
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -100,69 +166,204 @@ class ProjectDetailsScreen extends ConsumerWidget {
       (sum, payment) => sum + payment.amount,
     );
     final remaining = totalCost - totalPaid;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isTablet = screenWidth > 600;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(project.name),
-        actions: [
-          TextButton(
-            child: Text('الفاتورة'.tr,
-                style: TextStyle(color: Colors.black, fontSize: 18)),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => PdfInvoiceScreen(projectId: projectId),
+        elevation: 0,
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                Icons.folder_open,
+                color: Theme.of(context).colorScheme.primary,
+                size: isTablet ? 28 : 24,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                project.name,
+                style: TextStyle(
+                  fontSize: isTablet ? 22 : 20,
+                  fontWeight: FontWeight.bold,
                 ),
-              );
-            },
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          Container(
+            margin: const EdgeInsets.only(right: 8, left: 12),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: TextButton.icon(
+              onPressed: () {
+                Navigator.of(context).push(
+                  SmoothTransitions.slideTransition(
+                    PdfInvoiceScreen(projectId: projectId),
+                  ),
+                );
+              },
+              label: Text(
+                'invoice'.tr,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.w600,
+                  fontSize: isTablet ? 16 : 14,
+                ),
+              ),
+            ),
           ),
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppConstants.defaultPadding),
+        padding: EdgeInsets.all(isTablet ? 24 : 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Financial Summary Card
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(AppConstants.defaultPadding),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'financialSummary'.tr,
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    const Divider(),
-                    _buildSummaryRow('totalCost'.tr, totalCost, context),
-                    _buildSummaryRow('totalPaid'.tr, totalPaid, context,
-                        color: Colors.green),
-                    _buildSummaryRow('remaining'.tr, remaining, context,
-                        color: remaining > 0 ? Colors.red : Colors.green,
-                        isBold: true),
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                    Theme.of(context)
+                        .colorScheme
+                        .primaryContainer
+                        .withOpacity(0.05),
                   ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Card(
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(isTablet ? 24 : 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .primary
+                                  .withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Icon(
+                              Icons.trending_up,
+                              color: Theme.of(context).colorScheme.primary,
+                              size: isTablet ? 28 : 24,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Text(
+                            'financialSummary'.tr,
+                            style: TextStyle(
+                              fontSize: isTablet ? 18 : 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: isTablet ? 20 : 16),
+                      _buildSummaryRow(
+                        'totalCost'.tr,
+                        totalCost,
+                        context,
+                        isTablet,
+                        icon: Icons.attach_money,
+                      ),
+                      SizedBox(height: isTablet ? 12 : 10),
+                      _buildSummaryRow(
+                        'totalPaid'.tr,
+                        totalPaid,
+                        context,
+                        isTablet,
+                        color: Theme.of(context).colorScheme.primary,
+                        icon: Icons.check_circle,
+                      ),
+                      SizedBox(height: isTablet ? 12 : 10),
+                      Container(
+                        padding: EdgeInsets.all(isTablet ? 12 : 10),
+                        decoration: BoxDecoration(
+                          color: remaining > 0
+                              ? Theme.of(context).colorScheme.errorContainer
+                              : Theme.of(context).colorScheme.primaryContainer,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: _buildSummaryRow(
+                          'remaining'.tr,
+                          remaining,
+                          context,
+                          isTablet,
+                          color: remaining > 0
+                              ? Theme.of(context).colorScheme.error
+                              : Theme.of(context).colorScheme.primary,
+                          isBold: true,
+                          icon: remaining > 0 ? Icons.error : Icons.done_all,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: isTablet ? 32 : 24),
 
             // Payments Section
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'payments'.tr,
-                  style: Theme.of(context).textTheme.titleMedium,
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.tertiaryContainer,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(
+                        Icons.receipt_long,
+                        color:
+                            Theme.of(context).colorScheme.onTertiaryContainer,
+                        size: isTablet ? 24 : 20,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      'payments'.tr,
+                      style: TextStyle(
+                        fontSize: isTablet ? 18 : 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
                 TextButton.icon(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            PaymentsScreen(projectId: projectId),
+                    Navigator.of(context).push(
+                      SmoothTransitions.slideTransition(
+                        PaymentsScreen(projectId: projectId),
                       ),
                     );
                   },
@@ -171,23 +372,55 @@ class ProjectDetailsScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: isTablet ? 16 : 12),
 
             // Machines Section
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'machines'.tr,
-                  style: Theme.of(context).textTheme.titleMedium,
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.secondaryContainer,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(
+                        Icons.construction,
+                        color:
+                            Theme.of(context).colorScheme.onSecondaryContainer,
+                        size: isTablet ? 24 : 20,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      'machines'.tr,
+                      style: TextStyle(
+                        fontSize: isTablet ? 18 : 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
-                IconButton(
-                  icon: const Icon(Icons.add_circle),
-                  onPressed: () => _showAddMachineDialog(context, ref),
+                Container(
+                  decoration: BoxDecoration(
+                    color:
+                        Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.add_circle,
+                      color: Theme.of(context).colorScheme.primary,
+                      size: isTablet ? 28 : 24,
+                    ),
+                    onPressed: () => _showAddMachineDialog(context, ref),
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: isTablet ? 16 : 12),
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -208,26 +441,97 @@ class ProjectDetailsScreen extends ConsumerWidget {
                   (sum, log) => sum + log.totalPrice,
                 );
 
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 8),
-                  child: ListTile(
-                    leading: const Icon(Icons.minor_crash_outlined),
-                    title: Text(machine.name),
-                    subtitle: Text(
-                      '${CurrencyFormatter.format(machine.pricePerHour)}/ساعه • الإجمالي: ${CurrencyFormatter.format(machineTotal)}',
-                    ),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => WorkLogScreen(
-                            projectId: projectId,
-                            machineId: machineId,
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(12),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          SmoothTransitions.slideTransition(
+                            WorkLogScreen(
+                              projectId: projectId,
+                              machineId: machineId,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Card(
+                        elevation: 1,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: ListTile(
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: isTablet ? 20 : 16,
+                            vertical: isTablet ? 12 : 8,
+                          ),
+                          leading: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .tertiaryContainer,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Icon(
+                              Icons.construction,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onTertiaryContainer,
+                            ),
+                          ),
+                          title: Text(
+                            machine.name,
+                            style: TextStyle(
+                              fontSize: isTablet ? 17 : 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 4),
+                              Text(
+                                '${CurrencyFormatter.format(machine.pricePerHour)}/hour',
+                                style: TextStyle(
+                                  fontSize: isTablet ? 14 : 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .primaryContainer,
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Text(
+                                  'Total: ${CurrencyFormatter.format(machineTotal)}',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimaryContainer,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          trailing: Icon(
+                            Icons.chevron_right,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
-                      );
-                    },
+                      ),
+                    ),
                   ),
                 );
               },
@@ -238,28 +542,49 @@ class ProjectDetailsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSummaryRow(String label, double amount, BuildContext context,
-      {Color? color, bool isBold = false}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontWeight: isBold ? FontWeight.bold : null,
+  Widget _buildSummaryRow(
+    String label,
+    double amount,
+    BuildContext context,
+    bool isTablet, {
+    Color? color,
+    bool isBold = false,
+    IconData? icon,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            if (icon != null)
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: Icon(
+                  icon,
+                  size: 20,
+                  color:
+                      color ?? Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
+              ),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: isTablet ? 16 : 14,
+                fontWeight: isBold ? FontWeight.w700 : FontWeight.w600,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
+          ],
+        ),
+        Text(
+          CurrencyFormatter.format(amount),
+          style: TextStyle(
+            fontSize: isTablet ? 16 : 14,
+            fontWeight: isBold ? FontWeight.w700 : FontWeight.w600,
+            color: color ?? Theme.of(context).colorScheme.onSurface,
           ),
-          Text(
-            CurrencyFormatter.format(amount),
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: color,
-                  fontWeight: isBold ? FontWeight.bold : null,
-                ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

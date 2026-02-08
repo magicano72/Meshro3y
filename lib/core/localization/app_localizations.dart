@@ -41,7 +41,7 @@ class AppLocalizations {
       'totalHours': 'Total Hours',
       'machineNotFound': 'Machine Not Found',
       'areYouSureDelete': 'Are you sure you want to delete the log for',
-      'Date': 'التاريخ',
+
       // Payment Screen
       'addPayment': 'Add Payment',
       'editPayment': 'Edit Payment',
@@ -131,11 +131,14 @@ class AppLocalizations {
 
       // Home Screen
       'projects': 'المشاريع',
+      'activeProjects': 'المشاريع النشطة',
       'noProjects': 'لا توجد مشاريع حتى الآن',
       'addProject': 'إضافة مشروع',
       'projectName': 'اسم المشروع',
       'selectMachines': 'اختر الآلات',
-
+      'Date': 'التاريخ',
+      'Price per Hour': 'سعر الساعه',
+      'Machine Name': 'اسم الاله',
       // Project Details
       'projectDetails': 'تفاصيل المشروع',
       'machines': 'الآلات',
@@ -157,7 +160,8 @@ class AppLocalizations {
       'totalHours': 'إجمالي الساعات',
       'machineNotFound': 'الآلة غير موجودة',
       'areYouSureDelete': 'هل أنت متأكد من حذف السجل الخاص بـ',
-
+      'Phone Number': 'رقم التليفون',
+      'Name': 'الاسم',
       // Payment Screen
       'addPayment': 'إضافة دفعة',
       'editPayment': 'تعديل الدفعة',

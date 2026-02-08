@@ -41,17 +41,10 @@ class PaymentsScreen extends ConsumerWidget {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CustomTextField(
-              label: 'amount'.tr,
-              controller: amountController,
-              keyboardType: TextInputType.number,
-              prefixIcon: Icons.attach_money,
-            ),
-            const SizedBox(height: 16),
             TextField(
               controller: dateController,
-              decoration: const InputDecoration(
-                labelText: 'Date',
+              decoration: InputDecoration(
+                labelText: 'Date'.tr,
                 prefixIcon: Icon(Icons.calendar_today),
                 border: OutlineInputBorder(),
               ),
@@ -69,12 +62,19 @@ class PaymentsScreen extends ConsumerWidget {
                 }
               },
             ),
+            const SizedBox(height: 16),
+            CustomTextField(
+              label: 'amount'.tr,
+              controller: amountController,
+              keyboardType: TextInputType.number,
+              prefixIcon: Icons.attach_money,
+            ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text('cancel'.tr),
           ),
           ElevatedButton(
             onPressed: () {
@@ -109,7 +109,7 @@ class PaymentsScreen extends ConsumerWidget {
 
               Navigator.pop(context);
             },
-            child: const Text('Save'),
+            child: Text('save'.tr),
           ),
         ],
       ),

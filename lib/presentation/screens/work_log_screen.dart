@@ -87,7 +87,7 @@ class _WorkLogScreenState extends ConsumerState<WorkLogScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'.tr),
+            child: Text('cancel'.tr),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -147,7 +147,7 @@ class _WorkLogScreenState extends ConsumerState<WorkLogScreen> {
                 Navigator.pop(context);
               }
             },
-            child: Text('Save'.tr),
+            child: Text('save'.tr),
           ),
         ],
       ),

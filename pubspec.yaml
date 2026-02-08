@@ -21,6 +21,9 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   
+  # Typography & Fonts
+  google_fonts: ^6.1.0
+  
   # Utilities
   uuid: ^4.2.1
   intl: ^0.20.2
