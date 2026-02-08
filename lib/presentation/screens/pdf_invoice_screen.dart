@@ -56,7 +56,7 @@ class _PdfInvoiceScreenState extends ConsumerState<PdfInvoiceScreen> {
   Future<void> _generateAndPreviewPdf() async {
     if (_fromDate == null || _toDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select date range first')),
+        SnackBar(content: Text('selectDateRange'.tr)),
       );
       return;
     }

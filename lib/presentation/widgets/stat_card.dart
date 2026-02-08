@@ -137,7 +137,6 @@ class _StatCardState extends State<StatCard> with TickerProviderStateMixin {
       );
     }
 
-    final numValue = widget.value as num;
     return ScaleTransition(
       scale: Tween<double>(begin: 0.5, end: 1.0).animate(
         CurvedAnimation(parent: _counterController, curve: Curves.easeOutBack),
@@ -209,25 +208,34 @@ class _StatCardState extends State<StatCard> with TickerProviderStateMixin {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Header with icon and trailing widget
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            if (widget.icon != null)
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: iconColor.withAlpha(26),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  widget.icon,
-                  size: widget.iconSize,
-                  color: iconColor,
-                ),
-              ),
-            if (widget.trailing != null) widget.trailing!,
-          ],
-        ),
+        if (widget.icon != null || widget.trailing != null)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              if (widget.icon != null)
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: iconColor.withAlpha(26),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    widget.icon,
+                    size: widget.iconSize,
+                    color: iconColor,
+                  ),
+                )
+              else
+                const SizedBox.shrink(),
+              if (widget.trailing != null)
+                Flexible(
+                  child: widget.trailing!,
+                )
+              else
+                const SizedBox.shrink(),
+            ],
+          ),
         SizedBox(height: sizeConfig['spacing'] as double),
 
         // Value

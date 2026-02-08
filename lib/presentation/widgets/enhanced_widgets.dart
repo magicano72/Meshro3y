@@ -47,9 +47,6 @@ class SectionHeader extends StatelessWidget {
     final textColor = brightness == Brightness.light
         ? AppColors.lightTextPrimary
         : AppColors.darkTextPrimary;
-    final secondaryColor = brightness == Brightness.light
-        ? AppColors.lightTextSecondary
-        : AppColors.darkTextSecondary;
     final dividerColor = brightness == Brightness.light
         ? AppColors.lightDivider
         : AppColors.darkDivider;
@@ -339,9 +336,6 @@ class EmptyStateWidget extends StatelessWidget {
     final secondaryColor = brightness == Brightness.light
         ? AppColors.lightTextSecondary
         : AppColors.darkTextSecondary;
-    final primaryColor = brightness == Brightness.light
-        ? AppColors.lightPrimary
-        : AppColors.darkPrimary;
 
     Widget iconWidget = customChild ??
         Icon(

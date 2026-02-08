@@ -132,7 +132,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               )
             : null,
         color: gradientColors == null ? actualBgColor : null,
-        borderRadius: borderRadius,
+        borderRadius: actualBorderRadius,
         boxShadow: [
           if (elevation > 0)
             BoxShadow(
@@ -206,18 +206,26 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   flex: centerTitle ? 1 : 0,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.max,
                     children: [
                       if (suffixWidget != null) ...[
-                        suffixWidget!,
+                        Flexible(
+                          child: suffixWidget!,
+                        ),
                         const SizedBox(width: 8),
                       ],
                       if (actions != null && actions!.isNotEmpty)
-                        ...actions!
-                            .map((action) => Padding(
-                                  padding: const EdgeInsets.only(left: 8),
-                                  child: action,
-                                ))
-                            .toList(),
+                        Flexible(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: actions!
+                                .map((action) => Padding(
+                                      padding: const EdgeInsets.only(left: 8),
+                                      child: action,
+                                    ))
+                                .toList(),
+                          ),
+                        ),
                     ],
                   ),
                 ),

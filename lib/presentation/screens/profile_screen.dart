@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:Meshro3y/presentation/widgets/custom_button.dart';
+import 'package:Meshro3y/presentation/widgets/gradient_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,6 +10,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../core/localization/app_localizations.dart';
 import '../providers/owner_provider.dart';
+import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_text_field.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
@@ -123,27 +126,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     // Responsive sizing
     final sectionSpacing = isTablet ? 40.0 : 32.0;
     final fieldSpacing = isTablet ? 20.0 : 16.0;
-    final cardPadding = isTablet ? 24.0 : 20.0;
     final fontSize = isTablet ? 18.0 : 16.0;
     final avatarSize = isTablet ? 120.0 : 100.0;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('الملف الشخصي'.tr),
+      appBar: CustomAppBar(
+        leading: SizedBox(),
+        title: 'الملف الشخصي      '.tr,
         elevation: 0,
-        actions: [
-          TextButton(
-            child: Text(
-              'save'.tr,
-              style: TextStyle(
-                fontSize: isTablet ? 20 : 18,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-            onPressed: _saveOwner,
-          ),
-        ],
+        centerTitle: false,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(isTablet ? 24 : 16),
@@ -214,81 +205,76 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             SizedBox(height: sectionSpacing),
 
             // Owner Info Section
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Theme.of(context).colorScheme.primary.withOpacity(0.08),
-                    Theme.of(context)
-                        .colorScheme
-                        .primaryContainer
-                        .withOpacity(0.04),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Card(
-                elevation: 1,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(cardPadding),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+            GradientCard(
+              gradientColors: [
+                Theme.of(context).colorScheme.primary.withOpacity(0.08),
+                Theme.of(context)
+                    .colorScheme
+                    .primaryContainer
+                    .withOpacity(0.04),
+              ],
+              borderRadius: BorderRadius.circular(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .primary
-                                  .withOpacity(0.15),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Icon(
-                              Icons.person_outline,
-                              color: Theme.of(context).colorScheme.primary,
-                              size: isTablet ? 28 : 24,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Text(
-                            'ownerInfo'.tr,
-                            style: TextStyle(
-                              fontSize: fontSize,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: fieldSpacing + 4),
-                      SizedBox(
-                        height: isTablet ? 75 : 70,
-                        child: CustomTextField(
-                          label: 'Name'.tr,
-                          controller: _nameController,
-                          prefixIcon: Icons.badge,
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(
+                          Icons.person_outline,
+                          color: Theme.of(context).colorScheme.primary,
+                          size: isTablet ? 28 : 24,
                         ),
                       ),
-                      SizedBox(height: fieldSpacing),
-                      SizedBox(
-                        height: isTablet ? 75 : 70,
-                        child: CustomTextField(
-                          label: 'Phone Number'.tr,
-                          controller: _phoneController,
-                          keyboardType: TextInputType.phone,
-                          prefixIcon: Icons.phone,
+                      const SizedBox(width: 12),
+                      Text(
+                        'ownerInfo'.tr,
+                        style: TextStyle(
+                          fontSize: fontSize,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                     ],
                   ),
-                ),
+                  SizedBox(height: fieldSpacing + 4),
+                  SizedBox(
+                    height: isTablet ? 75 : 70,
+                    child: CustomTextField(
+                      label: 'Name'.tr,
+                      controller: _nameController,
+                      prefixIcon: Icons.badge,
+                    ),
+                  ),
+                  SizedBox(height: fieldSpacing),
+                  SizedBox(
+                    height: isTablet ? 75 : 70,
+                    child: CustomTextField(
+                      label: 'Phone Number'.tr,
+                      controller: _phoneController,
+                      keyboardType: TextInputType.phone,
+                      prefixIcon: Icons.phone,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: sectionSpacing),
+
+            // Save Button
+            SizedBox(
+              width: double.infinity,
+              child: CustomButton(
+                text: 'save'.tr,
+                onPressed: _saveOwner,
               ),
             ),
             SizedBox(height: sectionSpacing),

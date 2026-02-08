@@ -16,6 +16,10 @@ class AppLocalizations {
 
       // Home Screen
       'projects': 'Projects',
+      'activeProjects': 'Active Projects',
+      'totalProjects': 'Total Projects',
+      'totalMachines': 'Total Machines',
+      'viewAll': 'View All',
       'noProjects': 'No projects yet',
       'addProject': 'Add Project',
       'projectName': 'Project Name',
@@ -112,6 +116,21 @@ class AppLocalizations {
       'paymentDetails': 'Payment details',
       'remainingBalance': 'Remaining balance',
 
+      // PDF Invoice Labels
+      'from': 'From:',
+      'project': 'Project:',
+      'period': 'Period:',
+      'rate': 'Rate:',
+      'perHour': '/hour',
+      'tableDate': 'Date',
+      'tableHours': 'Hours',
+      'tableCost': 'Cost',
+      'tableTotal': 'Total',
+      'paymentHistory': 'Payment History',
+      'generatedOn': 'Generated on',
+      'pageOf': 'Page',
+      'of': 'of',
+
       // Language
       'language': 'Language',
       'english': 'English',
@@ -132,6 +151,9 @@ class AppLocalizations {
       // Home Screen
       'projects': 'المشاريع',
       'activeProjects': 'المشاريع النشطة',
+      'totalProjects': 'إجمالي المشاريع',
+      'totalMachines': 'إجمالي الآلات',
+      'viewAll': 'عرض الكل',
       'noProjects': 'لا توجد مشاريع حتى الآن',
       'addProject': 'إضافة مشروع',
       'projectName': 'اسم المشروع',
@@ -229,6 +251,21 @@ class AppLocalizations {
       'totalHoursAndCost': 'إجمالي الساعات والتكلفة',
       'paymentDetails': 'تفاصيل الدفع',
       'remainingBalance': 'الرصيد المتبقي',
+
+      // PDF Invoice Labels
+      'from': 'من:',
+      'project': 'المشروع:',
+      'period': 'الفترة:',
+      'rate': 'السعر:',
+      'perHour': '/ساعة',
+      'tableDate': 'التاريخ',
+      'tableHours': 'الساعات',
+      'tableCost': 'التكلفة',
+      'tableTotal': 'الإجمالي',
+      'paymentHistory': 'سجل الدفعات',
+      'generatedOn': 'تم الإنشاء في',
+      'pageOf': 'صفحة',
+      'of': 'من',
 
       // Language
       'language': 'اللغة',
