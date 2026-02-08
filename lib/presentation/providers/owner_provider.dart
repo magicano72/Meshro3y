@@ -15,15 +15,26 @@ class OwnerNotifier extends StateNotifier<OwnerModel?> {
     state = _repository.getOwner();
   }
 
-  Future<void> saveOwner(String name, String phone, String id) async {
-    final owner = OwnerModel(id: id, name: name, phone: phone);
+  Future<void> saveOwner(String name, String phone, String id,
+      {String? avatarPath}) async {
+    final owner = OwnerModel(
+      id: id,
+      name: name,
+      phone: phone,
+      avatarPath: avatarPath,
+    );
     await _repository.saveOwner(owner);
     state = owner;
   }
 
-  Future<void> updateOwner(String name, String phone) async {
+  Future<void> updateOwner(String name, String phone,
+      {String? avatarPath}) async {
     if (state != null) {
-      final updatedOwner = state!.copyWith(name: name, phone: phone);
+      final updatedOwner = state!.copyWith(
+        name: name,
+        phone: phone,
+        avatarPath: avatarPath,
+      );
       await _repository.saveOwner(updatedOwner);
       state = updatedOwner;
     }

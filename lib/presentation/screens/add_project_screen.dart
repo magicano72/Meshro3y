@@ -172,7 +172,7 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen>
                             ),
                             const SizedBox(width: 12),
                             Text(
-                              'projectInfo'.tr,
+                              'projectDetails'.tr,
                               style: TextStyle(
                                 fontSize: isTablet ? 18 : 16,
                                 fontWeight: FontWeight.bold,
@@ -327,7 +327,7 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen>
                             ),
                           ),
                           subtitle: Text(
-                            '${CurrencyFormatter.format(machine.pricePerHour)}/hour',
+                            '${CurrencyFormatter.format(machine.pricePerHour)}/ساعه',
                             style: TextStyle(
                               fontSize: isTablet ? 15 : 13,
                               fontWeight: FontWeight.w500,

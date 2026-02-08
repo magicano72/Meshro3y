@@ -11,7 +11,7 @@ import 'data/models/owner_model.dart';
 import 'data/models/payment_model.dart';
 import 'data/models/project_model.dart';
 import 'data/models/work_log_model.dart';
-import 'presentation/screens/home_screen.dart';
+import 'presentation/screens/main_navigation_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,8 +26,15 @@ void main() async {
   Hive.registerAdapter(WorkLogModelAdapter());
   Hive.registerAdapter(PaymentModelAdapter());
 
-  // Open Boxes
-  await Hive.openBox<OwnerModel>(AppConstants.ownerBox);
+  // Open Boxes with error handling for migration
+  try {
+    await Hive.openBox<OwnerModel>(AppConstants.ownerBox);
+  } catch (e) {
+    // Clear owner box if there's a compatibility issue
+    await Hive.deleteBoxFromDisk(AppConstants.ownerBox);
+    await Hive.openBox<OwnerModel>(AppConstants.ownerBox);
+  }
+
   await Hive.openBox<MachineModel>(AppConstants.machineBox);
   await Hive.openBox<ProjectModel>(AppConstants.projectBox);
   await Hive.openBox<WorkLogModel>(AppConstants.workLogBox);
@@ -67,7 +74,7 @@ class MyApp extends ConsumerWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      home: const HomeScreen(),
+      home: const MainNavigationScreen(),
     );
   }
 }
